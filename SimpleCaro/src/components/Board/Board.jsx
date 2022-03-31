@@ -21,7 +21,7 @@ const Board = ({ winningSquares, squares, onClick, size }) => {
 		return row;
 	};
 	const renderBoard = (n) => {
-		let board = [];
+		const board = [];
 		for (let i = 0; i < n; i++) {
 			board.push(
 				<div key={i} className='board-row'>
