@@ -1,64 +1,87 @@
 // change color nav bar when scroll
+const MAX_SCROLL_Y = 100;
 window.onscroll = () => {
 	const topNav = document.querySelector('.top-nav');
-	const top = window.scrollY;
-	if (top > 100) {
+	const topScrollY = window.scrollY;
+	if (topScrollY > MAX_SCROLL_Y) {
 		topNav.classList.add('active');
 	} else {
 		topNav.classList.remove('active');
 	}
 };
 
-/* handle action when open hamburger menu start */
-const overlayOff = () => {
-	document.getElementById('overlay').style.display = 'none';
-};
-
-const overlayOn = () => {
-	document.getElementById('overlay').style.display = 'block';
-};
-
-const hamburger = document.querySelector('.ham');
-const navSub = document.querySelector('.nav-sub');
-hamburger.addEventListener('click', () => {
-	hamburger.classList.toggle('change');
-	navSub.classList.toggle('nav-change');
-	if (hamburger.classList.value === 'ham change') {
-		overlayOn();
-	} else {
-		overlayOff();
-	}
-	changeMenuList();
-});
-
+// change nav item of hamburger menu list
+const MAX_SCREEN_WIDTH = 768;
 const changeMenuList = () => {
 	const screenWidth = document.querySelector('body').offsetWidth;
-	if (screenWidth < 768) {
+	if (screenWidth < MAX_SCREEN_WIDTH) {
 		document.getElementById('mail-address').style.display = 'block';
 	} else {
 		document.getElementById('mail-address').style.display = 'none';
 	}
 };
 
-/* handle action when open hamburger menu end */
+function makeHamburgerMenu() {
+	const turnOffOverlay = () => {
+		document.getElementById('overlay').style.display = 'none';
+	};
 
-const dataImage1 = [
-	{ src: '/assets/images/compresspng/list1_1-min.png', alt: 'image 1, carousel 1', title: 'BLISS TEXTURE ' },
-	{ src: '/assets/images/compresspng/list1_2-min.png', alt: 'image 2, carousel 1', title: 'DECAYED' },
-	{ src: '/assets/images/compresspng/list1_3-min.png', alt: 'image 3, carousel 1', title: 'BLISS TEXTURE ' },
-	{ src: '/assets/images/compresspng/list1_4-min.png', alt: 'image 4, carousel 1', title: 'DECAYED' },
-	{ src: '/assets/images/compresspng/list1_1-min.png', alt: 'image 1, carousel 1', title: 'BLISS TEXTURE ' },
-	{ src: '/assets/images/compresspng/list1_1-min.png', alt: 'image 1, carousel 1', title: 'BLISS TEXTURE ' },
+	const turnOnOverlay = () => {
+		document.getElementById('overlay').style.display = 'block';
+	};
+
+	const hamburger = document.querySelector('.ham');
+	return hamburger.addEventListener('click', () => {
+		const navSub = document.querySelector('.nav-sub');
+		hamburger.classList.toggle('change');
+		navSub.classList.toggle('nav-change');
+		if (hamburger.classList.value === 'ham change') {
+			turnOnOverlay();
+		} else {
+			turnOffOverlay();
+		}
+		changeMenuList();
+	});
+}
+const hamburgerMenuMaker = makeHamburgerMenu();
+
+const dataImageList1 = [
+	{
+		src: '/Excercise_4/assets/images/compresspng/list1_1-min.png',
+		alt: 'image 1, carousel 1',
+		title: 'BLISS TEXTURE',
+	},
+	{ src: '/Excercise_4/assets/images/compresspng/list1_2-min.png', alt: 'image 2, carousel 1', title: 'DECAYED' },
+	{
+		src: '/Excercise_4/assets/images/compresspng/list1_3-min.png',
+		alt: 'image 3, carousel 1',
+		title: 'BLISS TEXTURE',
+	},
+	{ src: '/Excercise_4/assets/images/compresspng/list1_4-min.png', alt: 'image 4, carousel 1', title: 'DECAYED' },
+	{
+		src: '/Excercise_4/assets/images/compresspng/list1_1-min.png',
+		alt: 'image 5, carousel 1',
+		title: 'BLISS TEXTURE',
+	},
+	{
+		src: '/Excercise_4/assets/images/compresspng/list1_1-min.png',
+		alt: 'image 6, carousel 1',
+		title: 'BLISS TEXTURE',
+	},
 ];
-const dataImage2 = [
-	{ src: '/assets/images/compresspng/list2_1-min.png', alt: 'image 1, carousel 2', title: 'BLISS TEXTURE ' },
-	{ src: '/assets/images/compresspng/list2_2-min.png', alt: 'image 2, carousel 2', title: 'DECAYED' },
-	{ src: '/assets/images/list2_3-min.png', alt: 'image 3, carousel 2', title: 'BLISS TEXTURE ' },
-	{ src: '/assets/images/compresspng/list2_4-min.png', alt: 'image 4, carousel 2', title: 'DECAYED' },
-	{ src: '/assets/images/list2_3-min.png', alt: 'image 3, carousel 2', title: 'BLISS TEXTURE ' },
+const dataImageList2 = [
+	{
+		src: '/Excercise_4/assets/images/compresspng/list2_1-min.png',
+		alt: 'image 1, carousel 2',
+		title: 'BLISS TEXTURE',
+	},
+	{ src: '/Excercise_4/assets/images/compresspng/list2_2-min.png', alt: 'image 2, carousel 2', title: 'DECAYED' },
+	{ src: '/Excercise_4/assets/images/list2_3-min.png', alt: 'image 3, carousel 2', title: 'BLISS TEXTURE' },
+	{ src: '/Excercise_4/assets/images/compresspng/list2_4-min.png', alt: 'image 4, carousel 2', title: 'DECAYED' },
+	{ src: '/Excercise_4/assets/images/list2_3-min.png', alt: 'image 5, carousel 2', title: 'BLISS TEXTURE' },
 ];
 
-const showCarousel = (dataList, indexCarousel) => {
+const displayCarouselItems = (dataList, indexCarousel) => {
 	const slides = document.getElementsByClassName('carousel')[indexCarousel];
 	dataList.forEach((data, index) => {
 		const carouselItem = document.createElement('div');
@@ -84,121 +107,125 @@ const showCarousel = (dataList, indexCarousel) => {
 		if (indexCarousel === 0) {
 			img = document.getElementsByClassName('card-img')[index];
 		} else {
-			img = document.getElementsByClassName('card-img')[index + dataImage1.length];
+			img = document.getElementsByClassName('card-img')[index + dataImageList1.length];
 		}
 		img.style.backgroundImage = `url(${data.src})`;
 	});
 };
 
-showCarousel(dataImage1, 0);
-showCarousel(dataImage2, 1);
+displayCarouselItems(dataImageList1, 0);
+displayCarouselItems(dataImageList2, 1);
 
-/* handle carousel start */
-const slides = document.querySelectorAll('.carousel');
-const carouselContainer = document.querySelector('.carousel-area');
+const MARGIN_RIGHT = 20;
+const MOBILE_CONTAINER_WIDTH = 480;
+const MOBILE_ITEM_WIDTH = 261;
+const OTHER_DEVICE_ITEM_WIDTH = 435;
 
-const numOfSlide = [];
-let currentSlide = []; // index of current slide in <no.> list
-let currentTranslate = {}; // {<index of list>: [<translated position>]}
-let moveOffset;
-let startX = 0,
-	endX = 0;
+function makeCarousel() {
+	const slides = document.querySelectorAll('.carousel');
+	const carouselContainer = document.querySelector('.carousel-area');
+	const numOfSlide = [];
+	let currentSlide = []; // index of current slide in <no.> list
+	let currentTranslate = {}; // {<index of list>: [<translated position>]}
+	let moveOffset;
+	let startX = 0;
+	let endX = 0;
 
-// init carousel parameter
-const makeSlide = () => {
-	moveOffset = slides[0].children[0].offsetWidth + 20;
-
-	for (let index = 0; index < slides.length; index++) {
-		numOfSlide.push(slides[index].children.length);
-		slides[index].style.width = moveOffset * numOfSlide[index] + 'px';
-
-		currentSlide.push(0);
-		currentTranslate[index] = [];
-
-		for (let i = 0; i < numOfSlide[index]; i++) {
-			currentTranslate[index].push(0);
+	const changeWidthForCarouselItem = (oldOffset, newOffset) => {
+		for (let i = 0; i < slides.length; i++) {
+			slides[i].style.width = newOffset * numOfSlide[i] + 'px';
+			const slideChildren = slides[i].children;
+			for (let index = 0; index < numOfSlide[i]; index++) {
+				const ratio = currentTranslate[i][index] / oldOffset;
+				currentTranslate[i][index] = newOffset * ratio;
+				slideChildren[index].style.transform = `translateX(${currentTranslate[i][index]}px)`;
+			}
 		}
-	}
-};
+	};
 
-// change width of carousel and the translation of each item
-const changeWidthForCarouselItem = (oldOffset, newOffset) => {
-	for (let i = 0; i < slides.length; i++) {
-		slides[i].style.width = newOffset * numOfSlide[i] + 'px';
-		const slide = slides[i].children;
-		for (let index = 0; index < numOfSlide[i]; index++) {
-			const ratio = currentTranslate[i][index] / oldOffset;
-			currentTranslate[i][index] = newOffset * ratio;
-			slide[index].style.transform = `translateX(${currentTranslate[i][index]}px)`;
+	const moveToSlide = (carouselIndex, moveOffset) => {
+		const slideChildren = slides[carouselIndex].children;
+		for (let index = 0; index < slideChildren.length; index++) {
+			slideChildren[index].style.transform = `translateX(${
+				currentTranslate[carouselIndex][index] + moveOffset
+			}px)`;
+			currentTranslate[carouselIndex][index] = currentTranslate[carouselIndex][index] + moveOffset;
 		}
-	}
+		const index = currentSlide[carouselIndex] % numOfSlide[carouselIndex];
+		slides[carouselIndex].children[index].style.transform = `translateX(${
+			currentTranslate[carouselIndex][index] - moveOffset * numOfSlide[carouselIndex]
+		}px)`;
+		currentTranslate[carouselIndex][index] =
+			currentTranslate[carouselIndex][index] - moveOffset * numOfSlide[carouselIndex];
+	};
+
+	return {
+		makeSlide: function () {
+			moveOffset = slides[0].children[0].offsetWidth + MARGIN_RIGHT;
+
+			for (let index = 0; index < slides.length; index++) {
+				numOfSlide.push(slides[index].children.length);
+				slides[index].style.width = moveOffset * numOfSlide[index] + 'px';
+
+				currentSlide.push(0);
+				currentTranslate[index] = [];
+
+				for (let i = 0; i < numOfSlide[index]; i++) {
+					currentTranslate[index].push(0);
+				}
+			}
+		},
+		handleWindowResize: function () {
+			window.addEventListener('resize', () => {
+				const oldMoveOffset = moveOffset;
+				let newMoveOffset = MARGIN_RIGHT;
+				if (carouselContainer.offsetWidth < MOBILE_CONTAINER_WIDTH) {
+					newMoveOffset += MOBILE_ITEM_WIDTH;
+				} else {
+					newMoveOffset += OTHER_DEVICE_ITEM_WIDTH;
+				}
+				changeWidthForCarouselItem(oldMoveOffset, newMoveOffset);
+				moveOffset = newMoveOffset;
+				changeMenuList(); ///
+			});
+		},
+		handleClickNextCarousel: function (carouselIndex) {
+			currentSlide[carouselIndex]--;
+			if (currentSlide[carouselIndex] < 0) {
+				currentSlide[carouselIndex] = numOfSlide[carouselIndex] - 1;
+			}
+			moveToSlide(carouselIndex, moveOffset);
+		},
+		handleClickPrevCarousel: function (carouselIndex) {
+			moveToSlide(carouselIndex, -moveOffset);
+			currentSlide[carouselIndex]++;
+		},
+		handleTouchStart: function (carouselIndex) {
+			slides[carouselIndex].addEventListener('touchstart', (event) => {
+				startX = event.changedTouches[0].clientX;
+			});
+		},
+		handleTouchEnd: function (carouselIndex) {
+			slides[carouselIndex].addEventListener('touchend', (event) => {
+				endX = event.changedTouches[0].clientX;
+
+				if (endX - startX > 0) handleClickNextCarousel(carouselIndex);
+				else if (endX - startX < 0) handleClickPrevCarousel(carouselIndex);
+			});
+		},
+	};
+}
+
+const carouselMaker = makeCarousel();
+carouselMaker.makeSlide();
+carouselMaker.handleWindowResize();
+const handleClickNextCarousel = (carouselIndex) => {
+	carouselMaker.handleClickNextCarousel(carouselIndex);
+};
+const handleClickPrevCarousel = (carouselIndex) => {
+	carouselMaker.handleClickPrevCarousel(carouselIndex);
 };
 
-window.addEventListener('resize', () => {
-	const oldMoveOffset = moveOffset;
-	let newMoveOffset;
-	if (carouselContainer.offsetWidth < 480) {
-		newMoveOffset = 281;
-	} else {
-		newMoveOffset = 455;
-	}
-	changeWidthForCarouselItem(oldMoveOffset, newMoveOffset);
-	moveOffset = newMoveOffset;
-	changeMenuList();
-});
-
-makeSlide();
-
-const moveNextSlide = (indexButton) => {
-	const sl = slides[indexButton].children;
-	for (let index = 0; index < sl.length; index++) {
-		sl[index].style.transform = `translateX(${currentTranslate[indexButton][index] + moveOffset}px)`;
-		currentTranslate[indexButton][index] = currentTranslate[indexButton][index] + moveOffset;
-	}
-
-	const index = currentSlide[indexButton] % numOfSlide[indexButton];
-	slides[indexButton].children[index].style.transform = `translateX(${
-		currentTranslate[indexButton][index] - moveOffset * numOfSlide[indexButton]
-	}px)`;
-	currentTranslate[indexButton][index] = currentTranslate[indexButton][index] - moveOffset * numOfSlide[indexButton];
-};
-
-const movePrevSlide = (indexButton) => {
-	const sl = slides[indexButton].children;
-	for (let index = 0; index < sl.length; index++) {
-		sl[index].style.transform = `translateX(${currentTranslate[indexButton][index] - moveOffset}px)`;
-		currentTranslate[indexButton][index] = currentTranslate[indexButton][index] - moveOffset;
-	}
-
-	const index = currentSlide[indexButton] % numOfSlide[indexButton];
-	slides[indexButton].children[index].style.transform = `translateX(${
-		currentTranslate[indexButton][index] + moveOffset * numOfSlide[indexButton]
-	}px)`;
-	currentTranslate[indexButton][index] = currentTranslate[indexButton][index] + moveOffset * numOfSlide[indexButton];
-};
-
-const handleClickNextCarousel = (indexButton) => {
-	currentSlide[indexButton]--;
-
-	if (currentSlide[indexButton] < 0) {
-		currentSlide[indexButton] = numOfSlide[indexButton] - 1;
-	}
-
-	moveNextSlide(indexButton);
-};
-const handleClickPrevCarousel = (indexButton) => {
-	movePrevSlide(indexButton);
-	currentSlide[indexButton]++;
-};
-
-slides[0].addEventListener('touchstart', (event) => {
-	startX = event.changedTouches[0].clientX;
-});
-slides[0].addEventListener('touchend', (event) => {
-	endX = event.changedTouches[0].clientX;
-
-	if (endX - startX > 0) handleClickNextCarousel(0);
-	else if (endX - startX < 0) handleClickPrevCarousel(0);
-});
-
-/* handle carousel end */
+// handle touch event for carousel 1
+carouselMaker.handleTouchStart(0);
+carouselMaker.handleTouchEnd(0);
