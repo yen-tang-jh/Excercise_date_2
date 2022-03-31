@@ -1,12 +1,15 @@
 import './styles.css';
 
+const PLAYER_COLOR = {
+	X: 'blue',
+	O: 'pink',
+};
 const Square = ({ isWinning, onClick, value }) => {
-	const color = value === 'X' ? 'blue' : 'pink';
 	return (
 		<button
-			className={'square ' + (isWinning ? 'square--winning' : null)}
+			className={'square ' + (isWinning ? 'square-winning' : null)}
 			onClick={onClick}
-			style={{ color: color }}
+			style={{ color: PLAYER_COLOR[value] }}
 		>
 			{value}
 		</button>

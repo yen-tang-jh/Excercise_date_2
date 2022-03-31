@@ -1,38 +1,38 @@
 import './styles.css';
 import Square from '../Square/Square';
 
-const Board = ({ winningSquares, squares, onClick, size }) => {
-	const renderSquare = (i) => {
+const Board = ({ winningSquares, squares, onClick, numOfLine }) => {
+	const renderSquare = (currentPositionOfSquare) => {
 		return (
 			<Square
-				key={i}
-				isWinning={winningSquares.includes(i) ? true : false}
-				value={squares[i]}
-				onClick={() => onClick(i)}
+				key={currentPositionOfSquare}
+				isWinning={winningSquares.includes(currentPositionOfSquare) ? true : false}
+				value={squares[currentPositionOfSquare]}
+				onClick={() => onClick(currentPositionOfSquare)}
 			/>
 		);
 	};
 
-	const renderRow = (n, num) => {
+	const renderRow = (numOfLine, lineIndex) => {
 		let row = [];
-		for (let i = 0; i < n; i++) {
-			row.push(renderSquare(n * num + i));
+		for (let i = 0; i < numOfLine; i++) {
+			row.push(renderSquare(numOfLine * lineIndex + i));
 		}
 		return row;
 	};
-	const renderBoard = (n) => {
+	const renderBoard = (numOfLine) => {
 		const board = [];
-		for (let i = 0; i < n; i++) {
+		for (let i = 0; i < numOfLine; i++) {
 			board.push(
 				<div key={i} className='board-row'>
-					{renderRow(n, i)}
+					{renderRow(numOfLine, i)}
 				</div>
 			);
 		}
 		return board;
 	};
 
-	const board = renderBoard(size);
+	const board = renderBoard(numOfLine);
 	return <div>{board}</div>;
 };
 
