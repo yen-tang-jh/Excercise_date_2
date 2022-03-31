@@ -18,6 +18,7 @@ const Game = () => {
 	]);
 
 	const handleClick = (i) => {
+		console.log(i);
 		const his = roadHistory.slice(0, stepNumber + 1);
 		const current = his[his.length - 1];
 		const squares = current.squares.slice();
@@ -39,24 +40,15 @@ const Game = () => {
 		setIsXNext(!isXNext);
 	};
 
-	const handleChangeSize = (e) => {
+	const handleChangeSizeInput = (e) => {
 		setInputSize(e.target.value);
 	};
 
-	const handleSubmitChangeSize = () => {
+	const handleSubmitChangeSizeBoard = () => {
 		setSizeOfBoard(inputSize);
 		setStepNumber(0);
 		setIsXNext(true);
 	};
-
-	useEffect(() => {
-		setRoadHistory((history) => [
-			{
-				squares: Array(sizeOfBoard * sizeOfBoard).fill(null),
-				lastMove: null,
-			},
-		]);
-	}, [sizeOfBoard]);
 
 	const jumpTo = (step) => {
 		setStepNumber(step);
@@ -67,13 +59,19 @@ const Game = () => {
 		setIsDesc(!isDesc);
 	};
 
-	const current = roadHistory[stepNumber];
-	const winner = calculateWinner(current.squares, sizeOfBoard);
+	const currentStep = roadHistory[stepNumber];
+	const winner = calculateWinner(currentStep.squares, sizeOfBoard);
+	let statusNoticeWinner;
+	if (winner) {
+		statusNoticeWinner = 'Winner: ' + winner.winner;
+	} else if (!currentStep.squares.includes(null)) {
+		statusNoticeWinner = 'Result: Draw';
+	} else {
+		statusNoticeWinner = 'Next player: ' + (isXNext ? 'X' : 'O');
+	}
 
-	const moves = roadHistory.map((step, move) => {
-		const desc = move
-			? 'Go to move #' + move + ' (' + roadHistory[move].lastMove.toString() + ')'
-			: 'Go to game start';
+	const moveList = roadHistory.map((step, move) => {
+		const desc = move ? `Go to move # ${move} ${roadHistory[move].lastMove.toString()}` : 'Go to game start';
 		return (
 			<li key={move}>
 				<button onClick={() => jumpTo(move)}>{move === stepNumber ? <b>{desc}</b> : desc}</button>
@@ -81,34 +79,34 @@ const Game = () => {
 		);
 	});
 
-	let status;
-	if (winner) {
-		status = 'Winner: ' + winner.winner;
-	} else if (!current.squares.includes(null)) {
-		status = 'Result: Draw';
-	} else {
-		status = 'Next player: ' + (isXNext ? 'X' : 'O');
-	}
+	useEffect(() => {
+		setRoadHistory([
+			{
+				squares: Array(sizeOfBoard * sizeOfBoard).fill(null),
+				lastMove: null,
+			},
+		]);
+	}, [sizeOfBoard]);
 
 	return (
 		<div className='game'>
 			<div className='game-board'>
 				<Board
-					winningSquares={winner ? winner.line : []}
-					squares={current.squares}
+					winningSquares={winner ? winner.lineWinner : []}
+					squares={currentStep.squares}
 					onClick={(i) => handleClick(i)}
-					size={sizeOfBoard}
+					numOfLine={sizeOfBoard}
 				/>
 			</div>
 			<div className='game-info'>
 				<b>Choose board size:</b> &nbsp;
-				<input type='number' name='size' style={{ width: 35 }} autoFocus onChange={handleChangeSize} />
+				<input type='number' name='size' style={{ width: 35 }} autoFocus onChange={handleChangeSizeInput} />
 				&nbsp;
-				<button onClick={handleSubmitChangeSize}>OK</button>
+				<button onClick={handleSubmitChangeSizeBoard}>OK</button>
 				<br />
 				<br />
 				<div>
-					<b>{status}</b>
+					<b>{statusNoticeWinner}</b>
 				</div>
 				<br />
 				<span>
@@ -118,7 +116,7 @@ const Game = () => {
 					</label>
 					&nbsp; Sort by: {isDesc ? 'Ascending' : 'Descending'}
 				</span>
-				<ol>{isDesc ? moves.reverse() : moves}</ol>
+				<ol>{isDesc ? moveList.reverse() : moveList}</ol>
 			</div>
 		</div>
 	);
