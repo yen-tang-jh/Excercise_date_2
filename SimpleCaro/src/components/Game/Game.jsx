@@ -6,37 +6,37 @@ import { calculateWinner } from '../../helpers/calculateWinner';
 
 const Game = () => {
 	const [stepNumber, setStepNumber] = useState(0);
-	const [xIsNext, setXIsNext] = useState(true);
+	const [isXNext, setIsXNext] = useState(true);
 	const [isDesc, setIsDesc] = useState(false);
-	const [size, setSize] = useState(5);
+	const [sizeOfBoard, setSizeOfBoard] = useState(5);
 	const [inputSize, setInputSize] = useState('');
-	const [history, setHistory] = useState([
+	const [roadHistory, setRoadHistory] = useState([
 		{
-			squares: Array(size * size).fill(null),
+			squares: Array(sizeOfBoard * sizeOfBoard).fill(null),
 			lastMove: null,
 		},
 	]);
 
 	const handleClick = (i) => {
-		const his = history.slice(0, stepNumber + 1);
+		const his = roadHistory.slice(0, stepNumber + 1);
 		const current = his[his.length - 1];
 		const squares = current.squares.slice();
-		if (calculateWinner(squares, size) || squares[i]) {
+		if (calculateWinner(squares, sizeOfBoard) || squares[i]) {
 			return;
 		}
-		squares[i] = xIsNext ? 'X' : 'O';
+		squares[i] = isXNext ? 'X' : 'O';
 
-		setHistory(
+		setRoadHistory(
 			his.concat([
 				{
 					squares: squares,
-					lastMove: [i % size, Math.floor(i / size)],
+					lastMove: [i % sizeOfBoard, Math.floor(i / sizeOfBoard)],
 				},
 			])
 		);
 
 		setStepNumber(his.length);
-		setXIsNext(!xIsNext);
+		setIsXNext(!isXNext);
 	};
 
 	const handleChangeSize = (e) => {
@@ -44,34 +44,36 @@ const Game = () => {
 	};
 
 	const handleSubmitChangeSize = () => {
-		setSize((size) => (size = inputSize));
+		setSizeOfBoard(inputSize);
 		setStepNumber(0);
-		setXIsNext(true);
+		setIsXNext(true);
 	};
 
 	useEffect(() => {
-		setHistory((history) => [
+		setRoadHistory((history) => [
 			{
-				squares: Array(size * size).fill(null),
+				squares: Array(sizeOfBoard * sizeOfBoard).fill(null),
 				lastMove: null,
 			},
 		]);
-	}, [size]);
+	}, [sizeOfBoard]);
 
 	const jumpTo = (step) => {
 		setStepNumber(step);
-		setXIsNext(step % 2 === 0);
+		setIsXNext(step % 2 === 0);
 	};
 
 	const sortHistory = () => {
 		setIsDesc(!isDesc);
 	};
 
-	const current = history[stepNumber];
-	const winner = calculateWinner(current.squares, size);
+	const current = roadHistory[stepNumber];
+	const winner = calculateWinner(current.squares, sizeOfBoard);
 
-	const moves = history.map((step, move) => {
-		const desc = move ? 'Go to move #' + move + ' (' + history[move].lastMove.toString() + ')' : 'Go to game start';
+	const moves = roadHistory.map((step, move) => {
+		const desc = move
+			? 'Go to move #' + move + ' (' + roadHistory[move].lastMove.toString() + ')'
+			: 'Go to game start';
 		return (
 			<li key={move}>
 				<button onClick={() => jumpTo(move)}>{move === stepNumber ? <b>{desc}</b> : desc}</button>
@@ -85,10 +87,8 @@ const Game = () => {
 	} else if (!current.squares.includes(null)) {
 		status = 'Result: Draw';
 	} else {
-		status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+		status = 'Next player: ' + (isXNext ? 'X' : 'O');
 	}
-
-	console.log(current.squares);
 
 	return (
 		<div className='game'>
@@ -97,7 +97,7 @@ const Game = () => {
 					winningSquares={winner ? winner.line : []}
 					squares={current.squares}
 					onClick={(i) => handleClick(i)}
-					size={size}
+					size={sizeOfBoard}
 				/>
 			</div>
 			<div className='game-info'>
